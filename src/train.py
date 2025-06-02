@@ -1,3 +1,4 @@
+import pathlib
 from typing import Any, Dict, List, Optional, Tuple
 
 import hydra
@@ -62,20 +63,22 @@ def train(cfg: DictConfig) -> Tuple[Dict[str, Any], Dict[str, Any]]:
 
     log.info(f"Instantiating model <{cfg.model._target_}>")
     model: LightningModule = hydra.utils.instantiate(cfg.model)
+    project_folder = pathlib.Path(__file__).parent.parent
+    data_folder = project_folder / "logs" / "train"
     if cfg.get("text_model_checkpoint"):
-        text_model = torch.load("logs/train/runs/2025-06-01_10-34-01/checkpoints/epoch_002.ckpt", weights_only=False)['hyper_parameters']['model'].embedding_creator
+        text_model = torch.load(str(data_folder) + "/best_text_model.ckpt", weights_only=False)['hyper_parameters']['model'].embedding_creator
         if cfg.get("skip_train_text_model"):
             for param in text_model.parameters():
                 param.requires_grad_(False)
         model.model.embedding_creator.text_model = text_model
     if cfg.get("audio_model_checkpoint"):
-        audio_model = torch.load("logs/train/runs/2025-06-01_14-36-56/checkpoints/epoch_000.ckpt", weights_only=False)['hyper_parameters']['model'].embedding_creator
+        audio_model = torch.load(str(data_folder) + "/best_audio_model.ckpt", weights_only=False)['hyper_parameters']['model'].embedding_creator
         if cfg.get("skip_train_audio_model"):
             for param in audio_model.parameters():
                 param.requires_grad_(False)
         model.model.embedding_creator.audio_model = audio_model
     if cfg.get("video_model_checkpoint"):
-        video_model = torch.load("logs/train/runs/2025-06-01_14-57-29/checkpoints/epoch_001.ckpt", weights_only=False)['hyper_parameters']['model'].embedding_creator
+        video_model = torch.load(str(data_folder) + "/best_video_model.ckpt", weights_only=False)['hyper_parameters']['model'].embedding_creator
         if cfg.get("skip_train_video_model"):
             for param in video_model.parameters():
                 param.requires_grad_(False)

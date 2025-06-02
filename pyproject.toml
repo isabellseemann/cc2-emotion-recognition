@@ -17,6 +17,7 @@ dependencies = [
     "matplotlib>=3.10.3",
     "scikit-learn>=1.6.1",
     "notebook>=7.4.3",
+    "tqdm"
 ]
 
 [dependency-groups]

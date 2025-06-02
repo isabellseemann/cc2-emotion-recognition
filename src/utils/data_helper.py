@@ -3,15 +3,13 @@ import torch
 
 
 def get_vector_with_only_dominant_emotion(label):
-    max_value = np.max(label)  # Get the maximum value
-    dominant_indices = np.where(label == max_value)[1]  # Get indices of the dominant values
-    # Handle multiple dominant values (if tie occurs)
+    max_value = np.max(label)
+    dominant_indices = np.where(label == max_value)[1]
     if len(dominant_indices) > 1:
-        selected_index = dominant_indices[len(dominant_indices) - 1]  # Randomly pick one of the indices
+        selected_index = dominant_indices[len(dominant_indices) - 1]
     else:
-        selected_index = dominant_indices[0]  # Only one dominant value
-    # Update the array to keep only the dominant value
-    max_vector = np.zeros_like(label)  # Reset the array to zeros or default values
+        selected_index = dominant_indices[0]
+    max_vector = np.zeros_like(label)
     max_vector[0][selected_index] = max_value
     return max_vector
 
@@ -41,11 +39,13 @@ def cut_data(dominant_labels_train, open_face_data):
         indices_of_max = np.where(label == max_value)[1]
         max_index = indices_of_max[0]
         if max_index == 0:
-            if happiness_counter == 2000:
+            # if happiness_counter == 2000:
+            if happiness_counter == 4000:
                 continue
             happiness_counter += 1
         if max_index == 1:
-            if sadness_counter == 2000:
+            # if sadness_counter == 2000:
+            if sadness_counter == 4000:
                 continue
             sadness_counter += 1
         # if max_index == 2:

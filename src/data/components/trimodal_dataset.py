@@ -10,7 +10,8 @@ class TrimodalDataset(Dataset):
         self.video_data = video_features
         self.labels = labels
 
-        assert len(text_features) == len(audio_features) == len(video_features) == len(labels), \
+        assert (len(text_features) == len(audio_features) and len(audio_features) == len(video_features)
+                and len(video_features) == len(labels)), \
             "All modalities must have the same number of samples"
 
     def __len__(self):
