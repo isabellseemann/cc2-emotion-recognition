@@ -1,0 +1,44 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: cmu_trimodal
+  - override /model: cmu_trimodal
+  - override /callbacks: default
+  - override /trainer: mps
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["cmu_trimodal"]
+
+seed: 12345
+text_model_checkpoint: true
+audio_model_checkpoint: true
+video_model_checkpoint: true
+skip_train_text_model: true
+skip_train_video_model: true
+skip_train_audio_model: true
+
+trainer:
+  min_epochs: 5
+  max_epochs: 500
+  num_sanity_val_steps: 0
+  accumulate_grad_batches: 5
+
+
+model:
+  learning_rate: 0.001        # Learning rate for optimizer
+  compile: false
+
+data:
+  batch_size: 64
+
+logger:
+  wandb:
+    tags: ${tags}
+    group: "cmu-mosei"
+  aim:
+    experiment: "cmu-mosei"

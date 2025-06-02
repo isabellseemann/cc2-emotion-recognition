@@ -1,0 +1,39 @@
+_target_: src.models.cmu_mosei_module.CmuMoseiModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0
+
+
+model:
+  _target_: src.models.components.emotion_embedding_creator.EmotionClassifier
+  embedding_creator:
+    _target_: src.models.components.trimodal_embedding_creator.TrimodalEmotionEmbeddingCreator
+    text_model:
+      _target_: src.models.components.glove_embedding_creator.GloveEmotionEmbeddingCreator
+      embedding_dim: 300
+      kernel_sizes: [ 3, 4, 5 ]
+      num_filters: 50
+    audio_model:
+      _target_: src.models.components.video_emotion_embedding_creator.AudioVideoEmotionEmbeddingCreator
+      cnn_out_channels: 64
+      lstm_hidden_size: 128
+      lstm_layers: 1
+      dropout: 0
+    video_model:
+      _target_: src.models.components.video_emotion_embedding_creator.AudioVideoEmotionEmbeddingCreator
+      cnn_out_channels: 64
+      lstm_hidden_size: 128
+      lstm_layers: 1
+      dropout: 0
+  classifier:
+    _target_: src.models.components.classifier.Classifier
+    input_size: 444
+    dropout_value: 0.3
+    hidden_size: 128
+
+
+# compile model for faster training with pytorch 2.0
+compile: false
